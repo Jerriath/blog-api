@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     username: { required, String },
-    password: { required, String }
+    password: { required, String },
 });
 
 // This middleware function will run when a new user is saved. It simply hashes the user password via bcrypt
