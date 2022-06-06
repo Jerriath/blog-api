@@ -8,18 +8,18 @@ const router = express.Router();
 const controller = require('../controllers/postsController');
 
 // GET for all posts
-router.get('/posts', controller.posts_list);
+router.get('/', controller.posts_list);
 
 // GET for a single post
-router.get('/posts/:postId', controller.posts_get);
+router.get('/:postId', controller.posts_get);
 
 // POST for a new post
-router.post('/posts/create', controller.posts_malone);
+router.post('/create', controller.posts_malone);
 
 // UPDATE for a post
-router.put('/posts/:postId', controller.posts_update);
+router.put('/:postId', controller.posts_update);
 
 // DELETE for a post
-router.delete('/posts/:postId', controller.posts_delete);
+router.delete('/:postId', controller.posts_delete);
 
 module.exports = router;

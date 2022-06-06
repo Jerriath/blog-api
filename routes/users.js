@@ -8,9 +8,9 @@ const controller = require('../controllers/usersController');
 const router = express.Router();
 
 // POST for creating a user (NOTE: will eventually be commented out in future update)
-router.post('/users/create'), controller.users_create_post
+router.post('/create'), controller.users_create_post
 
 // POST for signing in
-router.post('/users', controller.users_post);
+router.post('/', controller.users_post);
 
 module.exports = router;
