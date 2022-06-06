@@ -8,7 +8,7 @@ const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 
 // Exporting controller middleware
-exports.user_create_post = [
+exports.users_create_post = [
     body('username')
         .trim()
         .isLength({ min: 1})
@@ -25,7 +25,7 @@ exports.user_create_post = [
             if (confirmation !== req.body.password) { return next(new Error("Password did not match confirmation"))}
             else { return true; }
         }),
-    (req, res, next) => {
+    async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.json({
@@ -33,6 +33,7 @@ exports.user_create_post = [
                 errors
             });
         }
+        console.log("console.log from controller module");
         passport.authenticate('signup', { session: false }, (err, user, info) => {
             if (err) {
                 return next(err);
