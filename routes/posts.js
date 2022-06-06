@@ -17,7 +17,7 @@ router.get('/posts/:postId', controller.posts_get);
 router.post('/posts/create', controller.posts_malone);
 
 // UPDATE for a post
-router.update('/posts/:postId', controller.posts_update);
+router.put('/posts/:postId', controller.posts_update);
 
 // DELETE for a post
 router.delete('/posts/:postId', controller.posts_delete);

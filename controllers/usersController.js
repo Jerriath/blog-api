@@ -25,14 +25,38 @@ exports.user_create_post = [
             if (confirmation !== req.body.password) { return next(new Error("Password did not match confirmation"))}
             else { return true; }
         }),
-        (req, res, next) => {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.json({
-                    username: username,
-                    errors
-                });
-            }
-            
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.json({
+                username: username,
+                errors
+            });
         }
+        passport.authenticate('signup', { session: false }, (err, user, info) => {
+            if (err) {
+                return next(err);
+            }
+            res.json({
+                message: "Signed up successfully",
+                user
+            });
+        })(req, res, next);
+    }
+]
+
+exports.users_post = [
+    body('username')
+        .trim()
+        .isLength({ min: 1})
+        .escape(),
+    body('password')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    (req, res, next) => {
+        res.json({
+            message: "Not implemented yet"
+        })
+    }
 ]

@@ -2,12 +2,13 @@
 const express = require('express');
 
 // Importing controller module
+const controller = require('../controllers/usersController');
 
 // Initializing router variable
 const router = express.Router();
 
 // POST for creating a user (NOTE: will eventually be commented out in future update)
-router.post('/users/create')
+router.post('/users/create'), controller.users_create_post
 
 // POST for signing in
 router.post('/users', controller.users_post);

@@ -12,7 +12,7 @@ const apiRouter = require('./routes/api');
 const User = require('./models/user');
 
 // Setting up passport middleware
-passport.use('login', new LocalStrategy(
+passport.use('signup', new LocalStrategy(
     {
         'usernameField': 'username',
         'passwordField': 'password'

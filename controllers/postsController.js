@@ -8,4 +8,29 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { body, validationResult } = require('express-validator');
 
-// Exporting controller functions
+// Exporting controller middleware
+exports.posts_list = (req, res, next) => {
+    res.json({
+        message: 'Not implemented yet'
+    });
+}
+exports.posts_get = (req, res, next) => {
+    res.json({
+        message: 'Not implemented yet'
+    });
+}
+exports.posts_malone = (req, res, next) => {
+    res.json({
+        message: 'Not implemented yet'
+    });
+}
+exports.posts_update = (req, res, next) => {
+    res.json({
+        message: 'Not implemented yet'
+    });
+}
+exports.posts_delete = (req, res, next) => {
+    res.json({
+        message: 'Not implemented yet'
+    });
+}
