@@ -4,8 +4,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 require('dotenv').config();
 
 
@@ -15,8 +13,6 @@ const apiRouter = require('./routes/api');
 
 // Importing models
 const User = require('./models/user');
-const JwtStrategy = require('passport-jwt/lib/strategy');
-const { ExtractJwt } = require('passport-jwt/lib');
 
 
 // Setting up mongoose connection to MongoDB
@@ -26,66 +22,8 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, "MongoDB connection error"));
 
 
-// Setting up passport middleware
-passport.use('signup', new LocalStrategy(
-    {
-        'usernameField': 'username',
-        'passwordField': 'password' 
-    },
-
-    async (username, password, done) => {
-        try {
-            const newUser = await new User({
-                username,
-                password
-            });
-            await newUser.save(function(err) {
-                if (err) { throw err; }
-            });
-            return done(null, newUser);
-        } 
-        
-        catch(err) {
-            done(err);
-        }
-    }
-));
-
-passport.use('login', new LocalStrategy(
-    {
-        'usernameField': 'username',
-        'passwordField': 'password'
-    },
-    
-    async (username, password, done) => {
-        try {
-            const user = await User.findOne({username});
-            if (!user) {
-                throw new Error("User was not found");
-            }
-            const validationStatus = await user.validatePassword(password);
-            if (!validationStatus) {
-                throw new Error('Password was incorrect');
-            }
-            return done(null, user, { 'message': 'Logged in successfully'})
-        } 
-        
-        catch(err) {
-            done(err);
-        }
-    }
-));
-
-passport.use(new JwtStrategy(
-    {
-        'secretOrKey': process.env.JWT_SECRET,
-        'jwtFromRequest': ExtractJwt.fromAuthHeaderAsBearerToken()
-    },
-    
-    async (token, done) => {
-        return done(null, token.user);
-    }
-));
+// Requiring in passport file
+require('./passport');
 
 
 // Initializing our app and setting up its middleware
