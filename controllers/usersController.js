@@ -67,7 +67,7 @@ exports.login = [
             });
         }
 
-        passport.authenticate('login', (err, user, info) => {
+        passport.authenticate('login', { session: false }, (err, user, info) => {
             try {
                 if (err) { throw err; }
                 if (!user) { throw new Error('No user object returned'); }

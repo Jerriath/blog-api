@@ -16,8 +16,5 @@ router.post('/', controller.login);
 // POST for creating a user (NOTE: will eventually be commented out in future update)
 router.post('/create', controller.signup);
 
-// GET for logging out
-router.get('/logout', controller.logout);
-
 
 module.exports = router;
