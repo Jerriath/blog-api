@@ -1,9 +1,17 @@
-var express = require('express');
-var router = express.Router();
+// Importing necessary node modules
+const express = require('express');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with api resource');
-});
+// Initializing router constiable
+const router = express.Router();
+
+// Importing all other routers
+const usersRouter = require('./users');
+const commentsRouter = require('./comments');
+const postsRouter = require('./posts');
+
+// Setting up routing
+router.use('/users', usersRouter);
+router.use('/posts', postsRouter);
+router.use('/comments', commentsRouter);
 
 module.exports = router;
