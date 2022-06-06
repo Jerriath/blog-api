@@ -1,14 +1,17 @@
 // Importing model
 const Users = require('../models/user');
 
+
 // Importing necessary node modules
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 
+
 // Exporting controller middleware
-exports.users_create_post = [
+exports.signup = [
     body('username')
         .trim()
         .isLength({ min: 1})
@@ -26,6 +29,7 @@ exports.users_create_post = [
             else { return true; }
         }),
     async (req, res, next) => {
+
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.json({
@@ -33,11 +37,9 @@ exports.users_create_post = [
                 errors
             });
         }
-        console.log("console.log from controller module");
-        passport.authenticate('signup', { session: false }, (err, user, info) => {
-            if (err) {
-                return next(err);
-            }
+        
+        passport.authenticate('signup', { session: false }, (err, user) => {
+            if (err) { return next(err); }
             res.json({
                 message: "Signed up successfully",
                 user
@@ -46,7 +48,7 @@ exports.users_create_post = [
     }
 ]
 
-exports.users_post = [
+exports.login = [
     body('username')
         .trim()
         .isLength({ min: 1})
@@ -56,8 +58,34 @@ exports.users_post = [
         .isLength({ min: 1 })
         .escape(),
     (req, res, next) => {
-        res.json({
-            message: "Not implemented yet"
-        })
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.json({
+                username,
+                errors
+            });
+        }
+
+        passport.authenticate('login', (err, user, info) => {
+            try {
+                if (err) { throw err; }
+                if (!user) { throw new Error('No user object returned'); }
+                req.login(user, { session: false }, async (err) => {
+                    if (err) { throw err; }
+                    const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '2h' });
+                    return res.json({ token });
+                });
+            }
+
+            catch(err) {
+                next(err);
+            }
+        })(req, res, next);
     }
 ]
+
+exports.logout = (req, res) => {
+    req.logout();
+    res.redirect('/');
+}
