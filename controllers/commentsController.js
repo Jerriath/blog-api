@@ -11,10 +11,10 @@ const { json } = require('express/lib/response');
 
 // Exporting controller middleware
 exports.all_comments = async (req, res, next) => {
-    // Essentially need to call find on Comment and look for comments with a post value of req.params.postId
+    // Essentially need to call find on Comment and look for comments with a comment value of req.params.commentId
     try {
-        const comments = await Comment.find({ "post": req.params.postId });
-        if (!comments) { return res.status(404).json({ message: `could not find comments with a postId of ${req.params.postId}`})}
+        const comments = await Comment.find({ "comment": req.params.commentId });
+        if (!comments) { return res.status(404).json({ message: `could not find comments with a commentId of ${req.params.commentId}`})}
         return res.status(200).json({ comments });
     }
 
@@ -23,7 +23,7 @@ exports.all_comments = async (req, res, next) => {
     }
 }
 
-exports.post_comment = [
+exports.comment_comment = [
     body('name')
         .trim()
         .isLength({ min: 1 })
@@ -45,7 +45,7 @@ exports.post_comment = [
             const newComment = await new Comment({
                 name: req.body.name,
                 message: req.body.message,
-                post: req.params.postId,
+                comment: req.params.commentId,
                 date: Date.now()
             });
             await newComment.save((err, comment) => {
@@ -61,7 +61,13 @@ exports.post_comment = [
 ]
 
 exports.delete_comment = (req, res, next) => {
-    return res.json({
-        message: 'Not implemented yet'
-    });
+    try {
+        const comment = await comment.findByIdAndDelete(req.params.commentId);
+        if (!comment) { return res.status(404).json({ message: `could not find comment with an id of ${req.params.commentId}`}); }
+        return res.status(200).json({ comment });
+    }
+
+    catch (err) {
+        next(err);
+    }
 }

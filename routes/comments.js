@@ -18,7 +18,7 @@ router.get('/:postId', controller.all_comments);
 router.post('/:postId', controller.post_comment);
 
 // DELETE for a single comment on a post
-router.delete('/:commentId/delete', controller.delete_comment);
+router.delete('/:commentId', controller.delete_comment);
 
 
 module.exports = router;

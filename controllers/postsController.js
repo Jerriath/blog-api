@@ -121,6 +121,9 @@ exports.update_post = [
 
 exports.delete_post = async (req, res, next) => {
     try {
+        //Need to delete all comments referencing post first
+
+
         const post = await Post.findByIdAndDelete(req.params.postId);
         if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}`}); }
         return res.status(200).json({ post });
