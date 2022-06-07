@@ -15,7 +15,7 @@ const { json } = require('express/lib/response');
 // Exporting controller middleware
 exports.all_posts = async (req, res, next) => {
     try {
-        const posts = await Post.find({}).populate({ path: "user", model: "User"});
+        const posts = await Post.find({}).populate({ path: 'user', model: 'User'});
         console.log(posts);
         if (!posts) {
             throw new Error('no posts found in db');
@@ -30,7 +30,8 @@ exports.all_posts = async (req, res, next) => {
 
 exports.get_post = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.id);
+        const post = await Post.findById(req.params.postId).populate({ path: 'user', model: 'User'});
+        console.log(post);
         if (!post) {
             throw new Error('no posts found in db');
         }
