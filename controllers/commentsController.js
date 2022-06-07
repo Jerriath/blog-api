@@ -23,7 +23,7 @@ exports.all_comments = async (req, res, next) => {
     }
 }
 
-exports.comment_comment = [
+exports.post_comment = [
     body('name')
         .trim()
         .isLength({ min: 1 })
@@ -60,9 +60,9 @@ exports.comment_comment = [
     }
 ]
 
-exports.delete_comment = (req, res, next) => {
+exports.delete_comment = async (req, res, next) => {
     try {
-        const comment = await comment.findByIdAndDelete(req.params.commentId);
+        const comment = await Comment.findByIdAndDelete(req.params.commentId);
         if (!comment) { return res.status(404).json({ message: `could not find comment with an id of ${req.params.commentId}`}); }
         return res.status(200).json({ comment });
     }
