@@ -15,9 +15,10 @@ const { json } = require('express/lib/response');
 // Exporting controller middleware
 exports.all_posts = async (req, res, next) => {
     try {
-        const posts = await Post.find({});
+        const posts = await Post.find({}).populate({ path: "user", model: "User"});
+        console.log(posts);
         if (!posts) {
-            throw new Error('no users found in db');
+            throw new Error('no posts found in db');
         }
         return res.json({ posts });
     }
@@ -33,7 +34,7 @@ exports.get_post = async (req, res, next) => {
         if (!post) {
             throw new Error('no posts found in db');
         }
-        return res.json({ posts });
+        return res.json({ post });
     }
 
     catch (err) {
@@ -65,17 +66,14 @@ exports.post_malone = [ // OOOOooOOooooo some things you just can't refuuuuse, s
             title: req.body.title,
             content: req.body.content,
             date: Date.now(),
-            author: req.user._id,
+            user: req.user._id,
             published: req.body.published
         });
 
         try {
             await newPost.save((err, newPost) => {
                 if (err) { throw err; }
-                newPost.populate('author', (err, populatedPost) => {
-                    if (err) { return res.json({ err })}
-                    return res.json({ populatedPost });
-                })
+                return res.json({ newPost });
             })
         }
 

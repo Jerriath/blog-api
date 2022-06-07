@@ -8,7 +8,7 @@ const PostSchema = new Schema({
     title: { required: true, type: String },
     content: { required: true, type: String },
     date: { required: true, type: Date, default: Date.now() },
-    author: { required: true, type: String },
+    user: { required: true, type: Schema.Types.ObjectId, ref: 'User' },
     published: { required: true, type: Boolean, default: false }
 })
 
