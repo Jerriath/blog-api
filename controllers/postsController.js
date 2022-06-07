@@ -20,7 +20,7 @@ exports.all_posts = async (req, res, next) => {
         if (!posts) {
             throw new Error('no posts found in db');
         }
-        return res.json({ posts });
+        return res.status(200).json({ posts });
     }
     
     catch (err) {
@@ -35,7 +35,7 @@ exports.get_post = async (req, res, next) => {
         if (!post) {
             throw new Error('no posts found in db');
         }
-        return res.json({ post });
+        return res.status(200).json({ post });
     }
 
     catch (err) {
@@ -74,7 +74,7 @@ exports.post_malone = [ // OOOOooOOooooo some things you just can't refuuuuse, s
         try {
             await newPost.save((err, newPost) => {
                 if (err) { throw err; }
-                return res.json({ newPost });
+                return res.status(200).json({ newPost });
             })
         }
 
@@ -85,11 +85,43 @@ exports.post_malone = [ // OOOOooOOooooo some things you just can't refuuuuse, s
 ]
     
 
-exports.update_post = (req, res, next) => {
-    return res.json({
-        message: 'Not implemented yet'
-    });
-}
+exports.update_post = [
+    body('title')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('content')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({
+                title: req.body.title,
+                content: req.body.content,
+                errors
+            })
+        }
+
+        try {
+            const post = await Post.findByIdAndUpdate(req.params.postId, {
+                title: req.body.title,
+                content: req.body.content,
+                date: Date.now()
+            })
+            if (!post) {
+                throw new Error('could not find post in db')
+            }
+            return res.status(200).json({post})
+        }
+
+        catch(err) {
+            next(err);
+        }
+    }
+]
 
 exports.delete_post = (req, res, next) => {
     return res.json({

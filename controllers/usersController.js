@@ -40,7 +40,7 @@ exports.signup = [
         
         passport.authenticate('signup', { session: false }, (err, user) => {
             if (err) { return next(err); }
-            return res.json({
+            return res.status(200).json({
                 message: "Signed up successfully",
                 user
             });
@@ -74,7 +74,7 @@ exports.login = [
                 req.login(user, { session: false }, async (err) => {
                     if (err) { throw err; }
                     const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '2h' });
-                    return res.json({ token });
+                    return res.status(200).json({ token });
                 });
             }
 
