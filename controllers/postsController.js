@@ -18,7 +18,7 @@ exports.all_posts = async (req, res, next) => {
         const posts = await Post.find({}).populate({ path: 'user', model: 'User'});
         console.log(posts);
         if (!posts) {
-            throw new Error('no posts found in db');
+            throw new Error('nSomething definitely went wrong');
         }
         return res.status(200).json({ posts });
     }
@@ -32,9 +32,7 @@ exports.get_post = async (req, res, next) => {
     try {
         const post = await Post.findById(req.params.postId).populate({ path: 'user', model: 'User'});
         console.log(post);
-        if (!post) {
-            throw new Error('no posts found in db');
-        }
+        if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}`})}
         return res.status(200).json({ post });
     }
 
@@ -111,10 +109,8 @@ exports.update_post = [
                 content: req.body.content,
                 date: Date.now()
             })
-            if (!post) {
-                throw new Error('could not find post in db')
-            }
-            return res.status(200).json({post})
+            if (!post) { return res.status(404).json({ message: `couldnot find post with an id of ${req.params.postId}`}) }
+            return res.status(200).json({ post })
         }
 
         catch(err) {
@@ -123,8 +119,14 @@ exports.update_post = [
     }
 ]
 
-exports.delete_post = (req, res, next) => {
-    return res.json({
-        message: 'Not implemented yet'
-    });
+exports.delete_post = async (req, res, next) => {
+    try {
+        const post = await Post.findByIdAndDelete(req.params.postId);
+        if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}`}); }
+        return res.status(200).json({ post });
+    }
+
+    catch (error) {
+        next(error);
+    }
 }
