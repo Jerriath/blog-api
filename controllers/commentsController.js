@@ -45,7 +45,7 @@ exports.post_comment = [
             const newComment = await new Comment({
                 name: req.body.name,
                 message: req.body.message,
-                comment: req.params.commentId,
+                post: req.params.postId,
                 date: Date.now()
             });
             await newComment.save((err, comment) => {

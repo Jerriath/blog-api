@@ -122,10 +122,14 @@ exports.update_post = [
 exports.delete_post = async (req, res, next) => {
     try {
         //Need to delete all comments referencing post first
-
+        const comments = await Comment.find({ post: req.params.postId});
+        if (!comments) { return res.status(404).json({ message: `could not find comments with post id of ${req.params.postId}` })}
+        comments.forEach( async comment => {
+            comment = await Comment.findByIdAndDelete(comment._id);
+        })
 
         const post = await Post.findByIdAndDelete(req.params.postId);
-        if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}`}); }
+        if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}` }); }
         return res.status(200).json({ post });
     }
 
