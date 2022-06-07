@@ -1,5 +1,6 @@
 // Importing necessary node modules
 const express = require('express');
+const passport = require('passport');
 
 
 // Initializing router variable
@@ -18,13 +19,13 @@ router.get('/', controller.all_posts);
 router.get('/:postId', controller.get_post);
 
 // POST for a new post
-router.post('/create', controller.post_malone);
+router.post('/create', passport.authenticate('jwt', { session: false }), controller.post_malone);
 
 // UPDATE for a post
-router.put('/:postId', controller.update_post);
+router.put('/:postId', passport.authenticate('jwt', { session: false }), controller.update_post);
 
 // DELETE for a post
-router.delete('/:postId', controller.delete_post);
+router.delete('/:postId', passport.authenticate('jwt', { session: false }), controller.delete_post);
 
 
 module.exports = router;

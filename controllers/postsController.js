@@ -1,42 +1,132 @@
 // Importing models
-const comments = require('../routes/comments');
-const posts = require('../routes/posts');
-const users = require('../routes/users');
+const Comment = require('../models/comment');
+const Post = require('../models/post');
+const User = require('../models/user');
 
 
 // Importing necessary node modules
 const express = require('express');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const { json } = require('express/lib/response');
 
 
 // Exporting controller middleware
-exports.all_posts = (req, res, next) => {
-    res.json({
-        message: 'Not implemented yet'
-    });
+exports.all_posts = async (req, res, next) => {
+    try {
+        const posts = await Post.find({}).populate({ path: 'user', model: 'User'});
+        console.log(posts);
+        if (!posts) {
+            throw new Error('nSomething definitely went wrong');
+        }
+        return res.status(200).json({ posts });
+    }
+    
+    catch (err) {
+        next(err);
+    }
 }
 
-exports.get_post = (req, res, next) => {
-    res.json({
-        message: 'Not implemented yet'
-    });
+exports.get_post = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId).populate({ path: 'user', model: 'User'});
+        console.log(post);
+        if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}`})}
+        return res.status(200).json({ post });
+    }
+
+    catch (err) {
+        next(err);
+    }
 }
 
-exports.post_malone = (req, res, next) => {
-    res.json({
-        message: 'Not implemented yet'
-    });
-}
+exports.post_malone = [ // OOOOooOOooooo some things you just can't refuuuuse, she wanna ride me like a cruuuuuise, and I'm nooooot tryna looooooose
+    body('title')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('content')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({
+                title: req.body.title,
+                content: req.body.content,
+                errors
+            })
+        }
 
-exports.update_post = (req, res, next) => {
-    res.json({
-        message: 'Not implemented yet'
-    });
-}
+        const newPost = await new Post({
+            title: req.body.title,
+            content: req.body.content,
+            date: Date.now(),
+            user: req.user._id,
+            published: req.body.published
+        });
 
-exports.delete_post = (req, res, next) => {
-    res.json({
-        message: 'Not implemented yet'
-    });
+        try {
+            await newPost.save((err, newPost) => {
+                if (err) { throw err; }
+                return res.status(200).json({ newPost });
+            })
+        }
+
+        catch {
+            next(err);
+        }
+    }
+]
+    
+
+exports.update_post = [
+    body('title')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('content')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({
+                title: req.body.title,
+                content: req.body.content,
+                errors
+            })
+        }
+
+        try {
+            const post = await Post.findByIdAndUpdate(req.params.postId, {
+                title: req.body.title,
+                content: req.body.content,
+                date: Date.now()
+            })
+            if (!post) { return res.status(404).json({ message: `couldnot find post with an id of ${req.params.postId}`}) }
+            return res.status(200).json({ post })
+        }
+
+        catch(err) {
+            next(err);
+        }
+    }
+]
+
+exports.delete_post = async (req, res, next) => {
+    try {
+        const post = await Post.findByIdAndDelete(req.params.postId);
+        if (!post) { return res.status(404).json({ message: `could not find post with an id of ${req.params.postId}`}); }
+        return res.status(200).json({ post });
+    }
+
+    catch (error) {
+        next(error);
+    }
 }
