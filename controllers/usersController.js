@@ -1,5 +1,5 @@
 // Importing model
-const Users = require('../models/user');
+const User = require('../models/user');
 
 
 // Importing necessary node modules
@@ -28,11 +28,11 @@ exports.signup = [
             if (confirmation !== req.body.password) { return next(new Error("Password did not match confirmation"))}
             else { return true; }
         }),
-    async (req, res, next) => {
 
+    async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.json({
+            return res.json({
                 username: username,
                 errors
             });
@@ -40,7 +40,7 @@ exports.signup = [
         
         passport.authenticate('signup', { session: false }, (err, user) => {
             if (err) { return next(err); }
-            res.json({
+            return res.json({
                 message: "Signed up successfully",
                 user
             });
@@ -57,11 +57,11 @@ exports.login = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    (req, res, next) => {
 
+    (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.json({
+            return res.json({
                 username,
                 errors
             });
@@ -84,8 +84,3 @@ exports.login = [
         })(req, res, next);
     }
 ]
-
-exports.logout = (req, res) => {
-    req.logout();
-    res.redirect('/');
-}

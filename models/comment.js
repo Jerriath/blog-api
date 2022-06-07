@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 
 // Modeling out the model's schema
 const CommentSchema = new Schema({
-    name: { String },
-    message: { required: true, String },
-    date: { default: Date.now(), required, Date}
+    name: { type: String },
+    message: { required: true, type: String },
+    date: { default: Date.now(), required: true, type: Date}
 })
 
 

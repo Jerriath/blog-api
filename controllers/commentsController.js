@@ -1,6 +1,6 @@
 // Importing models
-const comments = require('../routes/comments');
-const posts = require('../routes/posts');
+const Comment = require('../models/comment');
+const Post = require('../models/post');
 
 
 // Importing necessary node modules
@@ -11,7 +11,7 @@ const { body, validationResult } = require('express-validator');
 
 // Exporting controller middleware
 exports.all_comments = (req, res, next) => {
-    res.json({
+    return res.json({
         message: 'Not implemented yet'
     });
 }
@@ -23,14 +23,14 @@ exports.post_comment = [
         .trim(),
     body('date'),
     (req, res, next) => {
-        res.json({
+        return res.json({
             message: 'Not implemented yet'
         });
     }
 ]
 
 exports.delete_comment = (req, res, next) => {
-    res.json({
+    return res.json({
         message: 'Not implemented yet'
     });
 }

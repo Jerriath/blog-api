@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 
 // Modeling out the schema
 const PostSchema = new Schema({
-    title: { required: true, String },
-    content: { required: true, String },
-    date: { required: true, Date, default: Date.now() },
-    author: { required: true, String },
-    published: { required: true, Boolean }
+    title: { required: true, type: String },
+    content: { required: true, type: String },
+    date: { required: true, type: Date, default: Date.now() },
+    author: { required: true, type: String },
+    published: { required: true, type: Boolean, default: false }
 })
 
 
