@@ -15,7 +15,7 @@ const { json } = require('express/lib/response');
 // Exporting controller middleware
 exports.all_posts = async (req, res, next) => { // Eventually I want to only query the key-value pairs that I need for this middleware
     try {
-        const posts = await Post.find({}).populate({ path: 'user', model: 'User'});
+        const posts = await Post.find({}).populate({ path: 'user', model: 'User'}).sort([['date', -1]]);
         console.log(posts);
         if (!posts) {
             throw new Error('nSomething definitely went wrong');

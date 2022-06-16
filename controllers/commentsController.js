@@ -13,7 +13,7 @@ const { json } = require('express/lib/response');
 exports.all_comments = async (req, res, next) => {
     // Essentially need to call find on Comment and look for comments with a comment value of req.params.commentId
     try {
-        const comments = await Comment.find({ "post": req.params.postId });
+        const comments = await Comment.find({ "post": req.params.postId }).sort([['date', -1]]);
         if (!comments) { return res.status(404).json({ message: `could not find comments with a commentId of ${req.params.commentId}`})}
         return res.status(200).json({ comments });
     }
