@@ -18,7 +18,7 @@ exports.all_posts = async (req, res, next) => { // Eventually I want to only que
         const posts = await Post.find({}).populate({ path: 'user', model: 'User'}).sort([['date', -1]]);
         console.log(posts);
         if (!posts) {
-            throw new Error('nSomething definitely went wrong');
+            throw new Error('Something definitely went wrong');
         }
         return res.status(200).json({ posts });
     }
@@ -99,6 +99,7 @@ exports.update_post = [
             return res.json({
                 title: req.body.title,
                 content: req.body.content,
+                published: req.body.published,
                 errors
             })
         }
@@ -107,6 +108,7 @@ exports.update_post = [
             const post = await Post.findByIdAndUpdate(req.params.postId, {
                 title: req.body.title,
                 content: req.body.content,
+                published: req.body.published,
                 date: Date.now()
             })
             if (!post) { return res.status(404).json({ message: `couldnot find post with an id of ${req.params.postId}`}) }
