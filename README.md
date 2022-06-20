@@ -22,3 +22,8 @@ The post router is the most involved router. It includes all CRUD operations for
 
 Comments are a lot more simple to deal with. The only jwt protected route is the delete route. Anyone using the blog client can create comments and get comments, but only an authorized user can delete comments.
 
+# Frontend
+
+These are the two frontend applications that leverage this api. Click on the links to see their repos.
+blog-client [here](https://github.com/Jerriath/blog-client)
+blog-cms [here](https://github.com/Jerriath/blog-cms)
